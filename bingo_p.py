@@ -18,6 +18,7 @@ class Carton:
     id: str
     idioma: str
     palabras: Set[str]
+    jugador_id: str = "N/A"
     aciertos: int = 0
     palabras_marcadas: Set[str] = field(default_factory=set)
 
@@ -41,7 +42,7 @@ class Carton:
         self.palabras_marcadas.clear()
 
     def __str__(self) -> str:
-        return f"[{self.id}] {IDIOMAS[self.idioma]['nombre']} - {self.aciertos}/{len(self.palabras)} palabras"
+        return f"[{self.id}] Jugador: {self.jugador_id} - {IDIOMAS[self.idioma]['nombre']} - {self.aciertos}/{len(self.palabras)} palabras"
 
 
 class GestorBingo:
@@ -76,7 +77,7 @@ class GestorBingo:
             return False, "Los últimos 6 caracteres deben ser numéricos"
         return True, prefijo
 
-    def agregar_carton(self, id_carton: str, palabras: List[str]) -> Tuple[bool, str]:
+    def agregar_carton(self, id_carton: str, palabras: List[str], jugador_id: str = "N/A") -> Tuple[bool, str]:
         es_valido, resultado = self.validar_id_carton(id_carton)
         if not es_valido:
             return False, resultado
@@ -94,13 +95,19 @@ class GestorBingo:
                 return False, f"Palabras no encontradas en el repositorio de {IDIOMAS[idioma]['nombre']}: {', '.join(palabras_invalidas)}"
             else:
                 return False, f"Palabras no encontradas en el repositorio de {IDIOMAS[idioma]['nombre']}: {', '.join(palabras_invalidas[:5])}... (+{len(palabras_invalidas)-5} más)"
-        carton = Carton(id=id_carton, idioma=idioma, palabras=palabras_normalizadas)
+        carton = Carton(id=id_carton, idioma=idioma, palabras=palabras_normalizadas, jugador_id=jugador_id)
         self.cartones[idioma][id_carton] = carton
         for palabra in palabras_normalizadas:
             if palabra not in self.indice_palabras[idioma]:
                 self.indice_palabras[idioma][palabra] = []
             self.indice_palabras[idioma][palabra].append(id_carton)
         return True, f"Cartón {id_carton} agregado correctamente"
+
+    def _es_jugador_id(self, texto: str) -> bool:
+        """Verifica si el texto tiene formato de ID de jugador (letra + dígitos, ej: J001)"""
+        if len(texto) < 2:
+            return False
+        return texto[0].isalpha() and texto[1:].isdigit()
 
     def cargar_desde_archivo(self, ruta_archivo: str) -> Tuple[int, int, List[str]]:
         cargados = 0
@@ -118,8 +125,17 @@ class GestorBingo:
                         fallidos += 1
                         continue
                     id_carton = partes[0]
-                    palabras = partes[1:]
-                    exito, mensaje = self.agregar_carton(id_carton, palabras)
+                    if len(partes) > 2 and self._es_jugador_id(partes[1]):
+                        jugador_id = partes[1]
+                        palabras = partes[2:]
+                    else:
+                        jugador_id = "N/A"
+                        palabras = partes[1:]
+                    if not palabras:
+                        errores.append(f"Línea {num_linea}: Se requiere al menos 1 palabra")
+                        fallidos += 1
+                        continue
+                    exito, mensaje = self.agregar_carton(id_carton, palabras, jugador_id)
                     if exito:
                         cargados += 1
                     else:
@@ -163,6 +179,29 @@ class GestorBingo:
                             nuevos_ganadores.append(carton)
                             self.ganadores[idioma].append(id_carton)
         return nuevos_ganadores
+
+    def calcular_limite_extracciones(self, idioma: str) -> int:
+        max_palabras = IDIOMAS[idioma]["max_palabras"]
+        num_cartones = len(self.cartones[idioma])
+        base = max_palabras * 2
+        ajuste = max(10, 50 / max(num_cartones, 1))
+        return int(base + ajuste)
+
+    def limite_alcanzado(self) -> bool:
+        idioma = self.obtener_idioma_actual()
+        if idioma is None:
+            return False
+        limite = self.calcular_limite_extracciones(idioma)
+        extracciones = len(self.palabras_anunciadas[idioma])
+        return extracciones >= limite
+
+    def obtener_extracciones_info(self) -> Tuple[int, int]:
+        idioma = self.obtener_idioma_actual()
+        if idioma is None:
+            return 0, 0
+        limite = self.calcular_limite_extracciones(idioma)
+        extracciones = len(self.palabras_anunciadas[idioma])
+        return extracciones, limite
 
     def avanzar_ronda(self) -> Tuple[bool, str]:
         self.ronda_actual += 1

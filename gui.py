@@ -66,6 +66,9 @@ class BingoApp:
         ttk.Label(frame_id, text="ID (ej: SP123456):").pack(side=tk.LEFT)
         self.entry_id = ttk.Entry(frame_id, width=15)
         self.entry_id.pack(side=tk.LEFT, padx=5)
+        ttk.Label(frame_id, text="Jugador ID (ej: J001):").pack(side=tk.LEFT, padx=(20, 0))
+        self.entry_jugador = ttk.Entry(frame_id, width=10)
+        self.entry_jugador.pack(side=tk.LEFT, padx=5)
         frame_palabras = ttk.Frame(frame_manual)
         frame_palabras.pack(fill=tk.X, pady=2)
         ttk.Label(frame_palabras, text="Palabras (separadas por espacio):").pack(side=tk.LEFT)
@@ -83,11 +86,16 @@ class BingoApp:
         self.filtro_idioma.set("Todos")
         self.filtro_idioma.pack(side=tk.LEFT, padx=5)
         self.filtro_idioma.bind("<<ComboboxSelected>>", lambda e: self.actualizar_lista_cartones())
-        columns = ("ID", "Idioma", "Palabras", "Estado")
+        columns = ("ID", "Jugador", "Idioma", "Palabras", "Estado")
         self.tree_cartones = ttk.Treeview(frame_lista, columns=columns, show="headings", height=10)
         for col in columns:
             self.tree_cartones.heading(col, text=col)
-            self.tree_cartones.column(col, width=100 if col != "Palabras" else 300)
+            if col == "Palabras":
+                self.tree_cartones.column(col, width=250)
+            elif col == "Jugador":
+                self.tree_cartones.column(col, width=80)
+            else:
+                self.tree_cartones.column(col, width=100)
         scrollbar = ttk.Scrollbar(frame_lista, orient=tk.VERTICAL, command=self.tree_cartones.yview)
         self.tree_cartones.configure(yscrollcommand=scrollbar.set)
         self.tree_cartones.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -126,11 +134,11 @@ class BingoApp:
         self.txt_ganadores.pack(fill=tk.BOTH, expand=True)
         frame_estado = ttk.LabelFrame(self.tab_partida, text="Estado de Cartones (Ronda Actual)", padding=5)
         frame_estado.pack(fill=tk.X, padx=10, pady=5)
-        columns_estado = ("ID", "Progreso", "Faltan", "Estado")
+        columns_estado = ("ID", "Jugador", "Progreso", "Faltan", "Estado")
         self.tree_estado = ttk.Treeview(frame_estado, columns=columns_estado, show="headings", height=5)
         for col in columns_estado:
             self.tree_estado.heading(col, text=col)
-            self.tree_estado.column(col, width=120)
+            self.tree_estado.column(col, width=100)
         scrollbar_estado = ttk.Scrollbar(frame_estado, orient=tk.VERTICAL, command=self.tree_estado.yview)
         self.tree_estado.configure(yscrollcommand=scrollbar_estado.set)
         self.tree_estado.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -138,11 +146,11 @@ class BingoApp:
 
     def crear_tab_estadisticas(self):
         frame_resumen = ttk.LabelFrame(self.tab_stats, text="Resumen General", padding=15)
-        frame_resumen.pack(fill=tk.X, padx=10, pady=10)
+        frame_resumen.pack(fill=tk.X, padx=10, pady=5)
         self.lbl_total_cartones = ttk.Label(frame_resumen, text="Total de cartones: 0", style='Header.TLabel')
         self.lbl_total_cartones.pack(anchor=tk.W)
         frame_idiomas = ttk.LabelFrame(self.tab_stats, text="Cartones por Idioma", padding=15)
-        frame_idiomas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        frame_idiomas.pack(fill=tk.X, padx=10, pady=5)
         self.labels_idiomas = {}
         for idioma, config in IDIOMAS.items():
             frame = ttk.Frame(frame_idiomas)
@@ -155,6 +163,22 @@ class BingoApp:
             progress = ttk.Progressbar(frame, length=200, mode='determinate')
             progress.pack(side=tk.RIGHT, padx=10)
             self.labels_idiomas[idioma] = {"count": lbl_count, "progress": progress}
+        frame_partida = ttk.LabelFrame(self.tab_stats, text="Estadísticas de Partida Actual", padding=15)
+        frame_partida.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        self.lbl_estado_partida = ttk.Label(frame_partida, text="No hay partida activa", style='Header.TLabel')
+        self.lbl_estado_partida.pack(anchor=tk.W)
+        self.lbl_orden_rondas = ttk.Label(frame_partida, text="", style='Status.TLabel')
+        self.lbl_orden_rondas.pack(anchor=tk.W, pady=(5, 10))
+        self.labels_partida = {}
+        for idioma, config in IDIOMAS.items():
+            frame = ttk.Frame(frame_partida)
+            frame.pack(fill=tk.X, pady=3)
+            ttk.Label(frame, text=f"{config['nombre']}:", width=15).pack(side=tk.LEFT)
+            lbl_palabras = ttk.Label(frame, text="0 palabras anunciadas", width=20)
+            lbl_palabras.pack(side=tk.LEFT, padx=10)
+            lbl_ganadores = ttk.Label(frame, text="0 ganadores", width=15)
+            lbl_ganadores.pack(side=tk.LEFT, padx=10)
+            self.labels_partida[idioma] = {"palabras": lbl_palabras, "ganadores": lbl_ganadores}
         ttk.Button(self.tab_stats, text="🔄 Actualizar Estadísticas",
                    command=self.actualizar_estadisticas).pack(pady=10)
 
@@ -180,6 +204,7 @@ class BingoApp:
 
     def agregar_carton_manual(self):
         id_carton = self.entry_id.get().strip()
+        jugador_id = self.entry_jugador.get().strip() or "N/A"
         palabras = self.entry_palabras.get().strip().split()
         if not id_carton:
             messagebox.showwarning("Error", "Ingrese el ID del cartón")
@@ -187,10 +212,11 @@ class BingoApp:
         if not palabras:
             messagebox.showwarning("Error", "Ingrese al menos una palabra")
             return
-        exito, mensaje = self.gestor.agregar_carton(id_carton, palabras)
+        exito, mensaje = self.gestor.agregar_carton(id_carton, palabras, jugador_id)
         if exito:
             messagebox.showinfo("Éxito", mensaje)
             self.entry_id.delete(0, tk.END)
+            self.entry_jugador.delete(0, tk.END)
             self.entry_palabras.delete(0, tk.END)
             self.actualizar_lista_cartones()
             self.actualizar_estadisticas()
@@ -209,7 +235,7 @@ class BingoApp:
                 if len(carton.palabras) > 5:
                     palabras_str += f"... (+{len(carton.palabras) - 5})"
                 estado = "✓ Ganador" if carton.es_ganador else f"{carton.aciertos}/{len(carton.palabras)}"
-                self.tree_cartones.insert("", tk.END, values=(id_carton, IDIOMAS[idioma]["nombre"], palabras_str, estado))
+                self.tree_cartones.insert("", tk.END, values=(id_carton, carton.jugador_id, IDIOMAS[idioma]["nombre"], palabras_str, estado))
 
     def actualizar_estadisticas(self):
         stats = self.gestor.obtener_estadisticas()
@@ -219,6 +245,24 @@ class BingoApp:
             count = len(self.gestor.cartones[idioma])
             labels["count"].config(text=f"{count} cartones")
             labels["progress"]["value"] = (count / max_cartones) * 100 if max_cartones > 0 else 0
+        if self.partida_activa:
+            ronda_actual = stats["ronda_actual"]
+            self.lbl_estado_partida.config(text=f"Ronda actual: {ronda_actual} de {len(IDIOMAS)}")
+            orden_str = " → ".join(stats["orden_rondas"])
+            self.lbl_orden_rondas.config(text=f"Orden: {orden_str}")
+        else:
+            self.lbl_estado_partida.config(text="No hay partida activa")
+            self.lbl_orden_rondas.config(text="")
+        for idioma, labels in self.labels_partida.items():
+            idioma_nombre = IDIOMAS[idioma]["nombre"]
+            if idioma_nombre in stats["por_idioma"]:
+                palabras = stats["por_idioma"][idioma_nombre]["palabras_anunciadas"]
+                ganadores = stats["por_idioma"][idioma_nombre]["ganadores"]
+                labels["palabras"].config(text=f"{palabras} palabras anunciadas")
+                labels["ganadores"].config(text=f"{ganadores} ganadores")
+            else:
+                labels["palabras"].config(text="0 palabras anunciadas")
+                labels["ganadores"].config(text="0 ganadores")
 
     def iniciar_partida(self):
         total = sum(len(c) for c in self.gestor.cartones.values())
@@ -255,6 +299,11 @@ class BingoApp:
                                f"Ya hay un ganador en la ronda de {IDIOMAS[idioma_actual]['nombre']}.\n"
                                "Avanza a la siguiente ronda para continuar.")
             return
+        if self.gestor.limite_alcanzado():
+            messagebox.showwarning("Límite alcanzado",
+                                   f"Se alcanzó el límite de extracciones para {IDIOMAS[idioma_actual]['nombre']}.\n"
+                                   "Avanza a la siguiente ronda para continuar.")
+            return
         palabra = self.repositorio.extraer_palabra(idioma_actual)
         if palabra is None:
             messagebox.showwarning("Repositorio agotado",
@@ -266,24 +315,35 @@ class BingoApp:
         if ganadores:
             for carton in ganadores:
                 self.txt_ganadores.insert(tk.END, f"🏆 {carton.id}\n")
+                self.txt_ganadores.insert(tk.END, f"   Jugador: {carton.jugador_id}\n")
                 self.txt_ganadores.insert(tk.END, f"   ({IDIOMAS[idioma_actual]['nombre']})\n\n")
             self.txt_ganadores.see(tk.END)
             self.btn_extraer.config(state=tk.DISABLED)
             messagebox.showinfo("¡GANADOR!",
                                f"¡Cartón(es) ganador(es)!\n\n" +
-                               "\n".join(f"• {c.id}" for c in ganadores) +
+                               "\n".join(f"• {c.id} - Jugador: {c.jugador_id}" for c in ganadores) +
                                "\n\nLa ronda ha finalizado. Avanza a la siguiente ronda.")
+        elif self.gestor.limite_alcanzado():
+            self.btn_extraer.config(state=tk.DISABLED)
+            extracciones, limite = self.gestor.obtener_extracciones_info()
+            self.txt_ganadores.insert(tk.END, f"❌ Sin ganador\n")
+            self.txt_ganadores.insert(tk.END, f"   ({IDIOMAS[idioma_actual]['nombre']})\n\n")
+            self.txt_ganadores.see(tk.END)
+            messagebox.showinfo("Ronda sin ganador",
+                               f"Se alcanzó el límite de {limite} extracciones.\n\n"
+                               f"No hubo ganador en la ronda de {IDIOMAS[idioma_actual]['nombre']}.\n\n"
+                               "Avanza a la siguiente ronda para continuar.")
         self.actualizar_estado_ronda()
         self.actualizar_palabras_restantes()
+        self.actualizar_estadisticas()
 
     def actualizar_palabras_restantes(self):
         idioma_actual = self.gestor.obtener_idioma_actual()
         if idioma_actual is None:
             self.lbl_restantes.config(text="")
             return
-        restantes = self.repositorio.obtener_palabras_restantes(idioma_actual)
-        total = self.repositorio.obtener_total_palabras(idioma_actual)
-        self.lbl_restantes.config(text=f"Repositorio: {restantes}/{total}")
+        extracciones, limite = self.gestor.obtener_extracciones_info()
+        self.lbl_restantes.config(text=f"Extracciones: {extracciones}/{limite}")
 
     def avanzar_ronda(self):
         if not self.partida_activa:
@@ -303,6 +363,7 @@ class BingoApp:
             self.btn_extraer.config(state=tk.NORMAL)
             self.actualizar_estado_ronda()
             self.actualizar_palabras_restantes()
+            self.actualizar_estadisticas()
             messagebox.showinfo("Nueva Ronda", f"{resumen}\n\n{mensaje}")
         else:
             self.partida_activa = False
@@ -310,6 +371,7 @@ class BingoApp:
             self.btn_extraer.config(state=tk.DISABLED)
             self.lbl_ronda.config(text="Partida Finalizada")
             self.lbl_restantes.config(text="")
+            self.actualizar_estadisticas()
             messagebox.showinfo("Partida Finalizada", f"{resumen}\n\n¡Todas las rondas han terminado!")
 
     def actualizar_estado_ronda(self):
@@ -322,7 +384,7 @@ class BingoApp:
         for id_carton, carton in cartones.items():
             faltan = len(carton.palabras) - carton.aciertos
             estado = "✓ GANADOR" if carton.es_ganador else "En juego"
-            self.tree_estado.insert("", tk.END, values=(id_carton, f"{carton.aciertos}/{len(carton.palabras)}", faltan, estado))
+            self.tree_estado.insert("", tk.END, values=(id_carton, carton.jugador_id, f"{carton.aciertos}/{len(carton.palabras)}", faltan, estado))
 
     def reiniciar_todo(self):
         if messagebox.askyesno("Confirmar", "¿Desea reiniciar todo? Se perderán todos los cartones cargados."):

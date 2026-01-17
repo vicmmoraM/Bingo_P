@@ -7,5 +7,5 @@ EN000003 J003 door window mirror phone key bag shoe shirt hat salt sugar apple o
 PT000001 J002 casa cachorro gato mesa cadeira livro agua fogo terra ar sol lua estrela flor arvore rio montanha praia cidade
 PT000002 J003 pao leite queijo ovo arroz carne fruta maca laranja banana uva tomate cebola sal acucar escola parque rua praca loja
 PT000003 J001 porta janela espelho telefone chave bolsa sapato camisa nuvem chuva vento pedra areia rua praca loja
-DT000001 J003 huis hond kat tafel stoel bed boek water vuur aarde
 DT000002 J002 zon maan ster wolk regen wind berg rivier zee boom
+DT000003 J003 zon maan ster wolk regen wind berg rivier zee boom
