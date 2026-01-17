@@ -1,0 +1,11 @@
+SP000001 casa perro gato mesa silla cama libro agua fuego tierra aire sol luna estrella flor arbol rio montaña playa ciudad
+SP000002 amor paz tiempo vida muerte suerte fuerza verdad juego musica baile canto risa sueño viaje pan leche queso huevo arroz
+SP000003 mesa silla puerta ventana espejo lampara reloj telefono llave bolsa zapato camisa gorra nube lluvia viento piedra arena hierba
+EN000001 house dog cat table chair book water fire earth sun moon star bird horse
+EN000002 tree flower mountain river sea beach cloud rain wind bread milk cheese egg rice
+EN000003 door window mirror phone key bag shoe shirt hat salt sugar apple orange fruit
+PT000001 casa cachorro gato mesa cadeira livro agua fogo terra ar sol lua estrela flor arvore rio montanha praia cidade
+PT000002 pao leite queijo ovo arroz carne fruta maca laranja banana uva tomate cebola sal acucar escola parque rua praca loja
+PT000003 porta janela espelho telefone chave bolsa sapato camisa nuvem chuva vento pedra areia rua praca loja
+DT000001 huis hond kat tafel stoel bed boek water vuur aarde
+DT000002 zon maan ster wolk regen wind berg rivier zee boom

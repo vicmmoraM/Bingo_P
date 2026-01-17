@@ -1,0 +1,72 @@
+# Word Repository - English
+# Total: 60 words
+# Categories: objects, nature, animals, food, places
+
+# Objects
+table
+chair
+book
+clock
+mirror
+window
+door
+phone
+key
+bag
+shoe
+shirt
+hat
+
+# Nature
+water
+fire
+earth
+sun
+moon
+star
+cloud
+rain
+wind
+mountain
+river
+sea
+beach
+tree
+flower
+
+# Animals
+dog
+cat
+bird
+horse
+fish
+lion
+bear
+wolf
+eagle
+rabbit
+
+# Food
+bread
+milk
+cheese
+egg
+rice
+meat
+fruit
+apple
+orange
+salt
+sugar
+
+# Places
+house
+school
+park
+city
+street
+store
+church
+bank
+garden
+beach

@@ -1,0 +1,56 @@
+# Woordenlijst - Nederlands (Dutch)
+# Totaal: 40 woorden
+# Categorieën: objecten, natuur, dieren, voedsel, plaatsen
+
+# Objecten
+tafel
+stoel
+boek
+klok
+spiegel
+raam
+deur
+bed
+telefoon
+sleutel
+tas
+schoen
+
+# Natuur
+water
+vuur
+aarde
+zon
+maan
+ster
+wolk
+regen
+wind
+berg
+rivier
+zee
+boom
+bloem
+
+# Dieren
+hond
+kat
+vogel
+paard
+vis
+leeuw
+beer
+
+# Voedsel
+brood
+melk
+kaas
+ei
+vlees
+appel
+
+# Plaatsen
+huis
+school
+park
+stad

@@ -1,0 +1,90 @@
+# Repositório de palavras - Português
+# Total: 80 palavras
+# Categorias: objetos, natureza, animais, alimentos, lugares
+
+# Objetos
+mesa
+cadeira
+livro
+relogio
+espelho
+janela
+porta
+cama
+telefone
+chave
+bolsa
+sapato
+camisa
+
+# Natureza
+agua
+fogo
+terra
+ar
+sol
+lua
+estrela
+nuvem
+chuva
+vento
+montanha
+rio
+mar
+praia
+floresta
+flor
+arvore
+pedra
+areia
+
+# Animais
+cachorro
+gato
+passaro
+cavalo
+vaca
+porco
+galinha
+pato
+coelho
+tartaruga
+peixe
+leao
+tigre
+urso
+lobo
+aguia
+borboleta
+
+# Alimentos
+pao
+leite
+queijo
+ovo
+arroz
+carne
+fruta
+maca
+laranja
+banana
+uva
+tomate
+cebola
+sal
+acucar
+
+# Lugares
+casa
+escola
+parque
+cidade
+rua
+praca
+loja
+hospital
+igreja
+banco
+museu
+teatro
+jardim
