@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
-from bingo_p import GestorBingo, RepositorioPalabras, IDIOMAS
+from bingo_p import GestorBingo, RepositorioPalabras, IDIOMAS, distancia_edicion
 
 
 class BingoApp:

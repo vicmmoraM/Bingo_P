@@ -1,0 +1,7 @@
+SP000010 J001 agau arie amro arbol casa
+SP000011 J002 perr gat mes sila cama
+SP000012 J003 libr fugo tierr sol lun
+EN000010 J001 hose dg cat tble chair
+EN000011 J002 bok watr fir erth sun
+PT000010 J001 csa cachoro gto mesa cadira
+DT000010 J001 hus hond kat tafl stoel
