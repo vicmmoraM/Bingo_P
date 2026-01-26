@@ -1,3 +1,23 @@
+"""
+================================================================================
+[Módulo de Gestor]
+================================================================================
+
+Autores:
+    - Victor Morales
+    - Andres Saltos
+    - Darwin Diaz
+    - Juliana Burgos
+    - Gabriel Tumbaco
+
+Curso: Análisis de Algoritmos II PAO 2025 - Paralelo 2 - Grupo 2
+
+Descripción:
+    Módulo que define la clase GestorBingo, responsable de la gestión
+    de cartones, rondas y la lógica del juego de Bingo.
+
+================================================================================
+"""
 import random
 from typing import Dict, List, Set, Optional, Tuple
 from constantes import IDIOMAS
@@ -86,6 +106,9 @@ class GestorBingo:
     def _es_jugador_id(self, texto: str) -> bool:
         if len(texto) < 2:
             return False
+        # Acepta nombres (empieza con mayúscula, solo letras) o formato antiguo (letra + números)
+        if texto[0].isupper() and texto.isalpha():
+            return True
         return texto[0].isalpha() and texto[1:].isdigit()
 
     def cargar_desde_archivo(self, ruta_archivo: str) -> Tuple[int, int, List[str]]:

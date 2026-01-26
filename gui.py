@@ -1,3 +1,25 @@
+"""
+================================================================================
+[Módulo GUI - Interfaz Gráfica de Usuario para Bingo_P]
+================================================================================
+
+Autores:
+    - Victor Morales
+    - Andres Saltos
+    - Darwin Diaz
+    - Juliana Burgos
+    - Gabriel Tumbaco
+
+Curso: Análisis de Algoritmos II PAO 2025 - Paralelo 2 - Grupo 2
+
+Descripción:
+    Módulo que define la clase BingoApp, responsable de la interfaz gráfica
+    de usuario para el juego Bingo_P.
+
+Referencias:
+    - Claude Sonnet 4.5 para el apoyo con la interfaz grafica del sistema
+================================================================================
+"""
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
 from bingo_p import GestorBingo, RepositorioPalabras, IDIOMAS, distancia_edicion

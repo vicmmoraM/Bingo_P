@@ -1,3 +1,27 @@
+"""
+================================================================================
+[Módulo: algoritmos.py]
+================================================================================
+
+Autores:
+    - Victor Morales
+    - Andres Saltos
+    - Darwin Diaz
+    - Juliana Burgos
+    - Gabriel Tumbaco
+
+Curso: Análisis de Algoritmos II PAO 2025 - Paralelo 2 - Grupo 2
+
+Descripción:
+    Módulo que contiene implementaciones de algoritmos clásicos utilizados en el proyecto de Bingo.
+
+Referencias:
+    - Algoritmos basados en: Cormen, T. H., et al. "Introduction to 
+      Algorithms", 3rd ed. MIT Press, 2009.
+    - Algoritmo de distancia de edición basado en: Wagner, R. A., y Fisher, M. J. 
+      "The string-to-string correction problem". Journal of the ACM (JACM), 1974.
+================================================================================
+"""
 from typing import List
 
 

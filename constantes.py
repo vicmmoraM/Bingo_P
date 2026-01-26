@@ -1,3 +1,21 @@
+"""
+================================================================================
+[Módulo: constantes.py]
+================================================================================
+
+Autores:
+    - Victor Morales
+    - Andres Saltos
+    - Darwin Diaz
+    - Juliana Burgos
+    - Gabriel Tumbaco
+
+Curso: Análisis de Algoritmos II PAO 2025 - Paralelo 2 - Grupo 2
+
+Descripción:
+    Módulo que define las constantes utilizadas en el proyecto de Bingo.
+================================================================================
+"""
 import os
 
 RUTA_REPOSITORIO = os.path.join(os.path.dirname(__file__), "repositorio")
