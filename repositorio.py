@@ -1,3 +1,21 @@
+"""
+================================================================================
+[Módulo: repositorio.py]
+================================================================================
+
+Autores:
+    - Victor Morales
+    - Andres Saltos
+    - Darwin Diaz
+    - Juliana Burgos
+    - Gabriel Tumbaco
+
+Curso: Análisis de Algoritmos II PAO 2025 - Paralelo 2 - Grupo 2
+
+Descripción:
+    Módulo que define la clase RepositorioPalabras utilizada en el proyecto de Bingo.
+========
+"""
 import os
 import random
 from typing import Dict, List, Set, Optional, Tuple
