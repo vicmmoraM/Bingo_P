@@ -55,6 +55,8 @@ Bingo_P/
 │   └── palabras_DT.txt
 └── cartones/          # Archivos de cartones
     └── cartones_ejemplo.txt
+documentación
+    └── Documento Pruebas G2 - Bingo_P
 ```
 
 ## Idiomas Soportados
@@ -283,10 +285,10 @@ Donde:
 
 ## Integrantes
 
-- Victor Morales
-- Andres Saltos
-- Darwin Diaz
-- Juliana Burgos
-- Gabriel Tumbaco
+- Burgos Juliana
+- Diaz Darwin
+- Morales Victor
+- Saltos Andres
+- Tumbaco Gabriel
 
 Curso: Analisis de Algoritmos II PAO 2025 - Paralelo 2 - Grupo 2
